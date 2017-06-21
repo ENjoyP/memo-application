@@ -8,14 +8,6 @@ module.exports = {
         filename: 'bundle.js'
     },
 
-    devServer: {
-        hot: true,
-        inline: true,
-        host: '0.0.0.0',
-        port: 4000,
-        contentBase: __dirname + '/public/',
-    },
-
     module: {
         loaders: [
             {
@@ -27,9 +19,5 @@ module.exports = {
                 exclude: /node_modules/,
             }
         ]
-    },
-
-    plugins: [
-        new webpack.HotModuleReplacementPlugin()
-    ]
+    }
 };
