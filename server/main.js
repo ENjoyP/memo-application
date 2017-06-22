@@ -44,6 +44,10 @@ app.get('/hello', (req, res) => {
 });
 
 app.use('/api', api);
+// 서버에서 클라이언트 사이드 라우팅을 호환하도록 수정
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './../public/index.html'));
+});
 
 app.listen(port, ()=>{
     console.log('Express is listening on port ', port);
