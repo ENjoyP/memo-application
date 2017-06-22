@@ -1,8 +1,10 @@
 var webpack = require('webpack');
+var path = require('path');
 
 module.exports = {
     entry : [
         './src/index.js',
+        './src/style.css',
         'webpack-dev-server/client?http://localhost:4000',
         'webpack/hot/only-dev-server'
     ],
@@ -47,7 +49,15 @@ module.exports = {
                     presets : ['es2015', 'react']
                 })],
                 exclude : /node_modules/
+            },
+            {
+                test : /\.css$/,
+                loader : 'style!css-loader'
             }
         ]
+    },
+
+    resolve : {
+        root : path.resolve('./src')
     }
 };
