@@ -2,8 +2,8 @@ var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
-    entry:  './src/index.js', 
-            './src/style.css'
+    entry: ['./src/index.js', 
+            './src/style.css'],
 
     output: {
         path: __dirname + '/public/',
