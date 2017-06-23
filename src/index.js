@@ -17,8 +17,8 @@ const store = createStore(reducers, applyMiddleware(thunk));
 
 const rootElement = document.getElementById('root');
 ReactDOM.render(
-    <Provider store={store}>
-        <Router>
+    <Router>
+        <Provider store={store}>
             <App>
                 <Switch>
                     <Route exact path='/' component={Home}/> 
@@ -26,7 +26,7 @@ ReactDOM.render(
                     <Route path='/register' component={Register}/>
                 </Switch>
             </App>
-        </Router>
-    </Provider>,
+        </Provider>
+    </Router>,
     rootElement
 );

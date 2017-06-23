@@ -26,7 +26,7 @@ class Header extends Component {
 
         const logoutBtn = (
             <li>
-                <a href="javascript:;">
+                <a href="javascript:;" onClick={this.props.onLogout}>
                     <i className="material-icons">lock_open</i>
                 </a>
             </li>
