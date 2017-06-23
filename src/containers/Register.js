@@ -1,18 +1,59 @@
 import React, { Component, PropTypes } from 'react';
+import { Authentication } from 'components';
+import { connect } from 'react-redux';
+import { registerRequest } from 'actions/authentication';
 
 const propTypes = {};
 const defaultProps = {};
+const mapStateToProps = (state) => {
+    return {
+        status : state.authentication.register.status,
+        errorCode : state.authentication.register.error
+    };
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        registerRequest : (id, pw) => {
+            return dispatch(registerRequest(id, pw));
+        }
+    }
+}
 
 class Register extends Component {
 
     constructor(props){
         super(props);
+        this.handleRegister = this.handleRegister.bind(this);
     };
+
+    handleRegister(id, pw){
+        return this.props.registerRequest(id, pw)
+            .then(
+                ()=> {
+                    if(this.props.status === "SUCCESS"){
+                        Materialize.toast('Success! Please log in', 2000);
+                        return true;
+                    } else {
+                        let errorMessage = [
+                            'Invalid Username',
+                            'Password is too short',
+                            'Username already exists'
+                        ];
+
+                        let $toastContent = $('<span style="color: #FFB4BA">'+ errorMessage[this.props.errorCode-1] +'</span>');
+                        Materialize.toast($toastContent, 2000);
+                        return false;
+                    }
+                }
+            );
+    }
 
     render(){
         return(
             <div>
-                <Authentication mode={false}/>
+                <Authentication mode={false}
+                    onRegister={this.handleRegister}/>
+                />
             </div>
         );
     }
@@ -21,4 +62,4 @@ class Register extends Component {
 Register.propTypes = propTypes;
 Register.defaultProps = defaultProps;
 
-export default Register;
+export default connect(mapStateToProps, mapDispatchToProps)(Register);

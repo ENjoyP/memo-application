@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 const propTypes = {
     mode : PropTypes.bool,
@@ -14,20 +14,73 @@ const defaultProps = {
 
 class Authentication extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             username : "",
-            password : ""
+            password : "",
+            success : false
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
+        this.handleRegister = this.handleRegister.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
     };
 
-    handleChange(e){
+    handleChange(e) {
         let nextState = {};
         nextState[e.target.name] = e.target.value;
         this.setState(nextState);
     };
+
+    handleLogin() {
+        let id = this.state.username;
+        let pw = this.state.password;
+
+        this.props.onLogin(id, pw).then(
+            (success) => {
+                if(!success) {
+                    this.setState({
+                        password : ''
+                    });
+                } else {
+                    this.setState({
+                        success : true
+                    });
+                }
+            }
+        );
+    };
+
+    handleRegister() {
+        let id = this.state.username;
+        let pw = this.state.password;
+
+        this.props.onRegister(id, pw).then(
+            (result) => {
+                if(!result) {
+                    this.setState({
+                        username : '',
+                        password : ''
+                    });
+                } else {
+                    this.setState({
+                        success : true
+                    });
+                }
+            }
+        );
+    }
+
+    handleKeyPress(e){
+        if(e.charCode === 13) {
+            if(this.props.mode) {
+                this.handleLogin();
+            } else {
+                this.handleRegister();
+            }
+        }
+    }
 
     render(){
          const inputBoxes = (
@@ -50,6 +103,7 @@ class Authentication extends Component {
                     className="validate"
                     onChange={this.handleChange}
                     value={this.state.password}
+                    onKeyPress={this.handleKeyPress}
                     />
                 </div>
             </div>
@@ -60,7 +114,10 @@ class Authentication extends Component {
                 <div className="card-content">
                     <div className='row'>
                         {inputBoxes}
-                        <a className="waves-effect waves-light btn">SUBMIT</a>
+                        <a className="waves-effect waves-light btn"
+                            onClick={this.handleLogin}>
+                            SUBMIT
+                        </a>
                     </div>
                     
                     <div className='footer'>
@@ -78,7 +135,10 @@ class Authentication extends Component {
             <div className="card-content">
                 <div className="row">
                     {inputBoxes}
-                    <a className="waves-effect waves-light btn">CREATE</a>
+                    <a className="waves-effect waves-light btn"
+                        onClick={this.handleRegister}>
+                        CREATE
+                    </a>
                 </div>
             </div>
         );
@@ -91,6 +151,7 @@ class Authentication extends Component {
                         <div className="card-content">{this.props.mode ? "LOGIN" : "REGISTER"}</div>
                     </div>
                     { this.props.mode ? loginView : registerView }
+                    { this.state.success ? <Redirect push to={this.props.mode? '/' : '/login'}/> : ''}
                 </div>
             </div>
         );
@@ -99,5 +160,7 @@ class Authentication extends Component {
 
 Authentication.propTypes = propTypes;
 Authentication.defaultProps = defaultProps;
-
+Authentication.contextTypes = {
+    router : PropTypes.object
+}
 export default Authentication;

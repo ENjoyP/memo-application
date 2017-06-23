@@ -3,12 +3,13 @@ import { Header } from 'components';
 
 class App extends React.Component {
     render(){
-        let re = /(login | register)/;
-        let isAuth = false;//re.test(this.props.location.pathname);
+        let re = /(login|register)/;
+        let tmp = window.location.pathname;
+        let isAuth = re.test(tmp);
 
         return (
             <div>
-                {isAuth? undefined : <Header />}
+                {isAuth ? undefined : <Header />}
                 { this.props.children }
             </div>
         );
