@@ -20,6 +20,7 @@
     "mongoose": "^4.10.7",
     "morgan": "^1.8.2",
     "path": "^0.12.7",
+    "prop-types": "^15.5.10",
     "react": "^15.2.1",
     "react-addons-update": "^15.6.0",
     "react-dom": "^15.2.1",

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
 
 const propTypes = {
@@ -151,7 +152,7 @@ class Authentication extends Component {
                         <div className="card-content">{this.props.mode ? "LOGIN" : "REGISTER"}</div>
                     </div>
                     { this.props.mode ? loginView : registerView }
-                    { this.state.success ? <Redirect push to={this.props.mode? '/' : '/login'}/> : ''}
+                    { this.state.success ? <Redirect push to={this.props.mode? '/' : '/login'}/> : undefined}
                 </div>
             </div>
         );
