@@ -134,7 +134,8 @@ Home.defaultProps = defaultProps;
 
 const mapStateToProps = (state) => {
     return {
-        isLoggedIn : state.authentication.status.isLoggedIn
+        isLoggedIn : state.authentication.status.isLoggedIn,
+        postStatus : state.memo.post
     };
 };
 
