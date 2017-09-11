@@ -23,13 +23,11 @@ class App extends React.Component {
         if(typeof loginData === "undefined") return;
 
         loginData = JSON.parse(atob(loginData));
-        console.log("loginData : ", loginData);
         
         if(!loginData.isLoggedIn) return;
 
         this.props.getStatusRequest().then(
             () => {
-                console.log("this.props.status : ", this.props.status);
                 if(!this.props.status.valid) {
                     loginData = {
                         isLoggedIn : false,

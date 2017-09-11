@@ -28,7 +28,7 @@ class MemoList extends Component {
                     />
                 );
             });
-        }
+        };
         return(
             <div>
                 {mapToComponents(this.props.data)}

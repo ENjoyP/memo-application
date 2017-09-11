@@ -27,9 +27,9 @@ class Memo extends Component {
     };
 
     componentDidUpdate() {
-            $('#dropdown-button-' + this.props.data._id).dropdown({
-                belowOrigin : true
-            });
+        $('#dropdown-button-' + this.props.data._id).dropdown({
+            belowOrigin : true
+        });
     }
 
     componentDidMount() {
