@@ -13,8 +13,8 @@ class App extends React.Component {
     
     componentDidMount(){
         function getCookie(name) {
-            var value = "; "+ document.cookie;
-            var parts = value.split("; "+ name + "=");
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
             if(parts.length === 2) return parts.pop().split(";").shift();
         }
 
@@ -23,12 +23,13 @@ class App extends React.Component {
         if(typeof loginData === "undefined") return;
 
         loginData = JSON.parse(atob(loginData));
-
+        console.log("loginData : ", loginData);
+        
         if(!loginData.isLoggedIn) return;
 
         this.props.getStatusRequest().then(
             () => {
-                console.log(this.props.status);
+                console.log("this.props.status : ", this.props.status);
                 if(!this.props.status.valid) {
                     loginData = {
                         isLoggedIn : false,
@@ -37,8 +38,8 @@ class App extends React.Component {
 
                     document.cookie = 'key=' + btoa(JSON.stringify(loginData));
 
-                    let $toastContent = $('<span style="color : #FFB4BA">Your session is expired, please log in again');
-                    Materialize.toast*($toastContent, 4000);
+                    let $toastContent = $('<span style="color : #FFB4BA">Your session is expired, please log in again</span>');
+                    Materialize.toast($toastContent, 4000);
                 }
             }
         );
