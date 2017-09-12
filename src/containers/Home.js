@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Write, MemoList } from 'components';
-import { memoPostRequest, memoListRequest } from 'actions/memo';
+import { 
+    memoPostRequest
+    , memoListRequest
+    , memoEditRequest 
+} from 'actions/memo';
 
 
 const propTypes = {};
@@ -15,6 +19,7 @@ class Home extends Component {
         this.handlePost = this.handlePost.bind(this);
         this.loadNewMemo = this.loadNewMemo.bind(this);
         this.loadOldMemo = this.loadOldMemo.bind(this);
+        this.handleEdit =   this.handleEdit.bind(this);
 
         this.state = {
             loadingState : false
@@ -131,88 +136,44 @@ class Home extends Component {
         });
     }
 
+    handleEdit(id, index, contents) {
+        return this.props.memoEditRequest(id, index, contents).then(
+            () => {
+                if(this.props.editStatus.status === "SUCCESS") {
+                    Materialize.toast('Success!', 2000);
+                } else {
+                    let errorMessage = [
+                        'Something broke',
+                        'Please write soemthing',
+                        'You are not logged in',
+                        'That memo does not exist anymore',
+                        'You do not have permission'
+                    ];
+                    
+                    let error = this.props.editStatus.error;
+
+                    let $toastContent = $(`<span style="color: #FFB4BA">${errorMessage[error -1]}</span>`);
+                    Materialize.toast($toastContent, 2000);
+
+                    if(error === 3) {
+                        setTimeout(() => {location.reload(false)}, 2000);
+                    }
+                }
+            }
+
+        );
+    }
+
     render(){
         const write = (<Write onPost={this.handlePost}/>);
-
-        var mockData = [
-            {
-                "_id": "578b958ec1da760909c263f4",
-                "writer": "velopert",
-                "contents": "Testing",
-                "__v": 0,
-                "is_edited": false,
-                "date": {
-                    "edited": "2016-07-17T14:26:22.428Z",
-                    "created": "2016-07-17T14:26:22.428Z"
-                },
-                "starred": []
-            },
-            {
-                "_id": "578b957ec1da760909c263f3",
-                "writer": "velopert",
-                "contents": "Data",
-                "__v": 0,
-                "is_edited": false,
-                "date": {
-                    "edited": "2016-07-17T14:26:06.999Z",
-                    "created": "2016-07-17T14:26:06.999Z"
-                },
-                "starred": []
-            },
-            {
-                "_id": "578b957cc1da760909c263f2",
-                "writer": "velopert",
-                "contents": "Mock",
-                "__v": 0,
-                "is_edited": false,
-                "date": {
-                    "edited": "2016-07-17T14:26:04.195Z",
-                    "created": "2016-07-17T14:26:04.195Z"
-                },
-                "starred": []
-            },
-            {
-                "_id": "578b9579c1da760909c263f1",
-                "writer": "velopert",
-                "contents": "Some",
-                "__v": 0,
-                "is_edited": false,
-                "date": {
-                    "edited": "2016-07-17T14:26:01.062Z",
-                    "created": "2016-07-17T14:26:01.062Z"
-                },
-                "starred": []
-            },
-            {
-                "_id": "578b9576c1da760909c263f0",
-                "writer": "velopert",
-                "contents": "Create",
-                "__v": 0,
-                "is_edited": false,
-                "date": {
-                    "edited": "2016-07-17T14:25:58.619Z",
-                    "created": "2016-07-17T14:25:58.619Z"
-                },
-                "starred": []
-            },
-            {
-                "_id": "578b8c82c1da760909c263ef",
-                "writer": "velopert",
-                "contents": "blablablal",
-                "__v": 0,
-                "is_edited": false,
-                "date": {
-                    "edited": "2016-07-17T13:47:46.611Z",
-                    "created": "2016-07-17T13:47:46.611Z"
-                },
-                "starred": []
-            }
-        ];
 
         return(
             <div className="wrapper">
                 {this.props.isLoggedIn ? write : undefined}
-                <MemoList data={this.props.memoData/*mockData*/} currentUser={this.props.currentUser} />
+                <MemoList 
+                    data={this.props.memoData} 
+                    currentUser={this.props.currentUser}
+                    onEdit={this.handleEdit} />
             </div>
         );
     }
@@ -228,7 +189,8 @@ const mapStateToProps = (state) => {
         currentUser : state.authentication.status.currentUser,
         memoData : state.memo.list.data,
         listStatus : state.memo.list.status,
-        isLast : state.memo.list.isLast
+        isLast : state.memo.list.isLast,
+        editStatus : state.memo.edit
     };
 };
 
@@ -239,6 +201,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         memoListRequest: (isInitial, listType, id, username) => {
             return dispatch(memoListRequest(isInitial, listType, id, username))
+        },
+        memoEditRequest: (id, index, contents) => {
+            return dispatch(memoEditRequest(id, index, contents));
         }
     };
 };

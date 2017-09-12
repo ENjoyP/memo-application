@@ -1,29 +1,42 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import TimeAgo from 'react-timeago';
 
 const propTypes = {
     data : PropTypes.object,
-    ownership : PropTypes.bool
+    ownership : PropTypes.bool,
+    onEdit : PropTypes.func,
+    index : PropTypes.number
 };
 const defaultProps = {
     data : {
         _id : 'id1234567890',
         writer : 'Writer',
         contents : 'Contents',
-        is_edited : false,
+        isEdited : false,
         date : {
             edited : new Date(),
             created : new Date()
         },
         starred : []
     },
-    ownership : true
+    ownership : true,
+    onEdit : (id, index, contents) => {
+        console.error('onEdit function not defined');
+    },
+    index : -1
 };
 
 class Memo extends Component {
 
     constructor(props){
         super(props);
+        this.state = {
+            editMode : false,
+            value : props.data.contents
+        };
+        this.toggleEdit = this.toggleEdit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     };
 
     componentDidUpdate() {
@@ -38,9 +51,35 @@ class Memo extends Component {
         });
     }
 
+    toggleEdit() {
+        if(this.state.editMode){
+            let id = this.props.data._id;
+            let index = this.props.index;
+            let contents = this.state.value;
+
+            this.props.onEdit(id, index, contents).then(() => {
+                this.setState({
+                    editMode : !this.state.editMode
+                });
+            });
+        } else {
+            this.setState({
+                editMode : !this.state.editMode
+            });
+        }
+    }
+
+    handleChange(e) {
+        this.setState({
+            value : e.target.value
+        });
+    }
+
     render(){
         const { data, ownership } = this.props;
-
+        let editedInfo = (
+            <span style={{color : '#AAB5BC'}}> · Edited <TimeAgo date={data.date.edited} live={true}/></span>
+        );
         const dropDownMenu = (
             <div className="option-button">
                 <a href="javascript:;" 
@@ -50,7 +89,7 @@ class Memo extends Component {
                     <i className="material-icons icon-button">more_vert</i>
                 </a>
                 <ul id={`dropdown-${data._id}`} className="dropdown-content">
-                    <li><a href="javascript:;">Edit</a></li>
+                    <li><a href="javascript:;" onClick={this.toggleEdit}>Edit</a></li>
                     <li><a href="javascript:;">Remove</a></li>
                 </ul>
             </div>
@@ -59,7 +98,8 @@ class Memo extends Component {
         const memoView = (
             <div className="card">
                 <div className="info">
-                    <a href="javascript:;" className="username">{data.writer}</a> wrote a log · {/*<TimeAgo date={data.date.created} />*/}
+                    <a href="javascript:;" className="username">{data.writer}</a> wrote a log · <TimeAgo date={data.date.created} />
+                    { data.isEdited ? editedInfo : undefined }
                     { ownership ? dropDownMenu : undefined }
                 </div>
                 <div className="card-content">
@@ -72,9 +112,27 @@ class Memo extends Component {
             </div>
         );
 
+        const editView = (
+            <div className="write">
+                <div className="card">
+                    <div className="card-content">
+                        <textarea
+                            className="materialize-textarea"
+                            value={this.state.value}
+                            onChange={this.handleChange}></textarea>
+                    </div>
+                    <div className="card-action">
+                        <a onClick={this.toggleEdit}>OK</a>
+                    </div>
+                </div>
+            </div>
+        );
+
+        
+
         return(
             <div className="container memo">
-                {memoView}
+                { this.state.editMode ? editView : memoView }
             </div>
         );
     }

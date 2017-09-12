@@ -38,7 +38,8 @@ router.post('/', (req, res) => {
     // CREATE NEW MEMO
     let memo = new Memo({
         writer: req.session.loginInfo.username,
-        contents: req.body.contents
+        contents: req.body.contents,
+        is_edited: true
     });
 
     // SAVE IN DATABASE
@@ -102,7 +103,6 @@ router.put('/:id', (req, res) => {
                 code: 4
             });
         }
-
         // IF EXISTS, CHECK WRITER
         if(memo.writer != req.session.loginInfo.username) {
             return res.status(403).json({
@@ -114,7 +114,7 @@ router.put('/:id', (req, res) => {
         // MODIFY AND SAVE IN DATABASE
         memo.contents = req.body.contents;
         memo.date.edited = new Date();
-        memo.is_edited = true;
+        memo.isEdited = true;
 
         memo.save((err, memo) => {
             if(err) throw err;
