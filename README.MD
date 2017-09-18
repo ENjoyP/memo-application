@@ -24,7 +24,12 @@ unzip node_modules.zip -d node_modules
 ## 실행하기
 
 ```
-npm run dev-server
+개발서버
+npm run win_development
+빌드
+npm run build
+실서버
+npm run win_start
 ```
 
-서버는 포트 8081 으로 실행됩니다. 변경은 webpack.config.js 에서 할 수 있습니다.
+서버는 개발 4000 포트, 실 3000 으로 실행됩니다.
