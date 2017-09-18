@@ -7,7 +7,10 @@ const propTypes = {
     ownership : PropTypes.bool,
     onEdit : PropTypes.func,
     index : PropTypes.number,
-    onRemove : PropTypes.func
+    onRemove : PropTypes.func,
+    onStar : PropTypes.func,
+    starStatus : PropTypes.object,
+    currentUser : PropTypes.string
 };
 const defaultProps = {
     data : {
@@ -28,7 +31,12 @@ const defaultProps = {
     index : -1,
     onRemove : (id, index) => {
         console.error('onRemove function not defined');
-    }
+    },
+    onStar : (id, index) => {
+        console.error('onStar function not defined');
+    },
+    starStatus : {},
+    currentUser : ''
 };
 
 class Memo extends Component {
@@ -42,7 +50,23 @@ class Memo extends Component {
         this.toggleEdit = this.toggleEdit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleRemove = this.handleRemove.bind(this);
+        this.handleStar = this.handleStar.bind(this);
     };
+
+    shouldComponentUpdate(nextProps, nextState) {
+        let current = {
+            props : this.props,
+            state : this.state
+        };
+
+        let next = {
+            props : nextProps,
+            state : nextState
+        };
+
+        let update = JSON.stringify(current) !== JSON.stringify(next);
+        return update;
+    }
 
     componentDidUpdate() {
         $('#dropdown-button-' + this.props.data._id).dropdown({
@@ -86,11 +110,24 @@ class Memo extends Component {
         this.props.onRemove(id, index);
     }
 
+    handleStar() {
+        let id = this.props.data._id;
+        let index = this.props.index;
+
+        this.props.onStar(id, index);
+    }
+
     render(){
+        console.log('MemoList render method executed');
+
         const { data, ownership } = this.props;
+
         let editedInfo = (
             <span style={{color : '#AAB5BC'}}> · Edited <TimeAgo date={data.date.edited} live={true}/></span>
         );
+
+        let starStyle = (this.props.data.starred.indexOf(this.props.currentUser) > -1) ? { color : '#ff9980'} : {};
+
         const dropDownMenu = (
             <div className="option-button">
                 <a href="javascript:;" 
@@ -117,7 +154,10 @@ class Memo extends Component {
                     {data.contents}
                 </div>
                 <div className="footer">
-                    <i className="material-icons log-footer-icon star icon-button">star</i>
+                    <i 
+                        className="material-icons log-footer-icon star icon-button"
+                        style={starStyle}
+                        onClick={this.handleStar}>star</i>
                     <span className="star-count">{data.starred.length}</span>
                 </div>
             </div>
