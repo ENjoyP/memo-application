@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
+import { Link } from 'react-router-dom';
 
 const propTypes = {
     data : PropTypes.object,
@@ -14,7 +15,7 @@ const propTypes = {
 };
 const defaultProps = {
     data : {
-        _id : 'id1234567890',
+        _id : 'id1234567890', 
         writer : 'Writer',
         contents : 'Contents',
         isEdited : false,
@@ -146,7 +147,7 @@ class Memo extends Component {
         const memoView = (
             <div className="card">
                 <div className="info">
-                    <a href="javascript:;" className="username">{data.writer}</a> wrote a log · <TimeAgo date={data.date.created} />
+                    <Link to={`/wall/${this.props.data.writer}`} className="username">{this.props.data.writer}</Link> wrote a log · <TimeAgo date={data.date.created} />
                     { data.isEdited ? editedInfo : undefined }
                     { ownership ? dropDownMenu : undefined }
                 </div>

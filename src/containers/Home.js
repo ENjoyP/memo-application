@@ -11,6 +11,7 @@ import {
 } from 'actions/memo';
 
 
+
 const propTypes = {username : PropTypes.string};
 const defaultProps = {username : undefined};
 
@@ -26,7 +27,8 @@ class Home extends Component {
         this.handleStar = this.handleStar.bind(this);
 
         this.state = {
-            loadingState : false
+            loadingState : false,
+            initiallyLoaded : false
         };
     };
 
@@ -36,6 +38,9 @@ class Home extends Component {
             this.loadNewMemo().then(
                 () => {
                     this.memoLoaderTimeoutId = setTimeout(loadMemoLoop, 5000);
+                    this.setState({
+                        initiallyLoaded : true
+                    });
                 }
             );
         };
@@ -87,6 +92,9 @@ class Home extends Component {
     componentWillUnmount() {
         clearTimeout(this.memoLoaderTimeoutId);
         $(window).unbind();
+        this.setState({
+            initiallyLoaded : false
+        });
     }
 
     handlePost(contents) {
@@ -248,7 +256,7 @@ class Home extends Component {
                         </div>
                     </div>
                 </div>
-                { this.props.memoData.length === 0 ? emptyView : undefined }
+                { this.props.memoData.length === 0 && this.state.initiallyLoaded ? emptyView : undefined }
             </div>
         );
 

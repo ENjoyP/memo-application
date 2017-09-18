@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { Search } from 'components';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+
 const propTypes = {
     isLoggedIn : PropTypes.bool,
     onLogout : PropTypes.func
@@ -14,7 +17,19 @@ class Header extends Component {
 
     constructor(props){
         super(props);
+
+        this.toggleSearch = this.toggleSearch.bind(this);
+
+        this.state = {
+            search : false
+        }
     };
+
+    toggleSearch() {
+        this.setState({
+            search : !this.state.search
+        });
+    }
 
     render(){
         const loginBtn = (
@@ -33,21 +48,26 @@ class Header extends Component {
             </li>
         );
         return(
-            <nav>
-                <div className="nav-wrapper blue darken-1">
-                    <Link to="/" className="brand-logo center">MEMOPAD</Link>
+            <div>
+                <nav>
+                    <div className="nav-wrapper blue darken-1">
+                        <Link to="/" className="brand-logo center">MEMOPAD</Link>
 
-                    <ul>
-                        <li><a><i className="material-icons">search</i></a></li>
-                    </ul>
-
-                    <div className="right">
                         <ul>
-                            { this.props.isLoggedIn ? logoutBtn : loginBtn }
+                            <li><a onClick={this.toggleSearch}><i className="material-icons">search</i></a></li>
                         </ul>
+
+                        <div className="right">
+                            <ul>
+                                { this.props.isLoggedIn ? logoutBtn : loginBtn }
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </nav>
+                </nav>
+                <ReactCSSTransitionGroup transitionName="search" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+                    { this.state.search ? <Search onClose={this.toggleSearch}/> : undefined }
+                </ReactCSSTransitionGroup>
+            </div>
         );
     }
 }
