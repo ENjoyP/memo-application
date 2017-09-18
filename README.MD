@@ -1,5 +1,6 @@
 # CodeLab-React-Fundamentals
-* this project is made by velopert and I brought it from his repository to studing 
+* Unfinished project
+
 
 ## About
 
