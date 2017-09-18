@@ -7,7 +7,7 @@ import {
     Route,
     Link
 } from 'react-router-dom';
-import { App, Home, Login, Register } from 'containers';
+import { App, Home, Login, Register, Wall } from 'containers';
 import { Provider } from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import reducers from 'reducers';
@@ -24,6 +24,7 @@ ReactDOM.render(
                     <Route exact path='/' component={Home}/> 
                     <Route path='/login' component={Login}/>
                     <Route path='/register' component={Register}/>
+                    <Route path='/wall/:username' component={Wall}/>
                 </Switch>
             </App>
         </Provider>

@@ -57,7 +57,8 @@ export function memoListRequest(isInitial, listType, id, username) {
         if(typeof username === "undefined"){
             url = isInitial ? url : `${url}/${listType}/${id}`;
         } else {
-            
+            // load memos of a user
+            url = isInitial ? `${url}/${username}` : `${url}/${username}/${listType}/${id}`;
         }
 
 
