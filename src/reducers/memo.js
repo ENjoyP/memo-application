@@ -1,7 +1,7 @@
 import * as types from 'actions/ActionTypes';
 import update from 'react-addons-update';
 
-const initalState = {
+const initialState = {
     post : {
         status : 'INIT',
         error : -1
@@ -25,7 +25,7 @@ const initalState = {
     }
 };
 
-export default function memo(state = initalState, action) {
+export default function memo(state = initialState, action) {
     switch(action.type){
         case types.MEMO_POST : 
             return update(state, {

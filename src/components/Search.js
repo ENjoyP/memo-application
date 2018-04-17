@@ -12,7 +12,7 @@ const defaultProps = {
     onClose : () => {
         console.error('onClose not defined');
     },
-    onSearch : () => {
+    onSearch : (keyword) => {
         console.error('onSearch not defined');
     },
     usernames : []
@@ -57,12 +57,12 @@ class Search extends Component {
     }
 
     handleSearch(keyword) {
-
+        this.props.onSearch(keyword);
     }
 
     handleKeyDown(e) {
         if(e.keyCode === 13) {
-            if(this.props.username.length > 0) {
+            if(this.props.usernames.length > 0) {
                 history.push('/wall/'+ this.props.usernames[0].username);
                 this.handleClose();
             }
@@ -72,7 +72,11 @@ class Search extends Component {
     render(){
 
         const mapDataToLinks = (data) => {
-
+            return data.map((user, i) => {
+                return (
+                    <li key={i}><Link to={`/wall/${user.username}`}>{user.username}</Link></li>
+                );
+            });
         };
 
         return(

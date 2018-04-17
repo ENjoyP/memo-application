@@ -1,7 +1,7 @@
 import * as types from 'actions/ActionTypes';
 import update from 'react-addons-update';
 
-const initalState = {
+const initialState = {
     login : {
         status : 'INIT'
     },
@@ -16,7 +16,7 @@ const initalState = {
     }
 };
 
-export default function authentication(state = initalState, action){
+export default function authentication(state = initialState, action){
 
     switch(action.type){
         case types.AUTH_LOGIN :

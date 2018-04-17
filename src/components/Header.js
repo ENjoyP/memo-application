@@ -6,11 +6,15 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 const propTypes = {
     isLoggedIn : PropTypes.bool,
-    onLogout : PropTypes.func
+    onLogout : PropTypes.func,
+    usernames : PropTypes.array,
+    onSearch : PropTypes.func
 };
 const defaultProps = {
     isLoggedIn : false,
-    onLogout : () => { console.error("logout function not defined"); }
+    onLogout : () => { console.error("logout function not defined"); },
+    usernames : [],
+    onSearch : () => { console.error("search function not defined"); }
 };
 
 class Header extends Component {
@@ -19,6 +23,7 @@ class Header extends Component {
         super(props);
 
         this.toggleSearch = this.toggleSearch.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
 
         this.state = {
             search : false
@@ -29,6 +34,10 @@ class Header extends Component {
         this.setState({
             search : !this.state.search
         });
+    }
+
+    handleSearch(keyword) {
+        this.props.onSearch(keyword);
     }
 
     render(){
@@ -65,7 +74,7 @@ class Header extends Component {
                     </div>
                 </nav>
                 <ReactCSSTransitionGroup transitionName="search" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
-                    { this.state.search ? <Search onClose={this.toggleSearch}/> : undefined }
+                    { this.state.search ? <Search onClose={this.toggleSearch} onSearch={this.handleSearch} usernames={this.props.usernames}/> : undefined }
                 </ReactCSSTransitionGroup>
             </div>
         );

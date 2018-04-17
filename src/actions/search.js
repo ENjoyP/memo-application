@@ -5,15 +5,16 @@ import {
 } from './ActionTypes';
 import axios from 'axios';
 
-export function searchRequest(username) {
+export function searchRequest(keyword) {
 
-    dispatch(search());
-
-    axios.get('/wall/' + username, (err, usernames) => {
-        dispatch(searchSuccess(usernames));
-    }).catch((error) => {
-        dispatch(searchFailure(error.response.data.code));
-    });
+    return (dispatch) => {
+        dispatch(search());
+        return axios.get('/api/account/search/' + keyword).then((response) => {
+                dispatch(searchSuccess(response.data));
+            }).catch((error) => {
+                dispatch(searchFailure(error.response.data.code));
+            });
+    };
 }
 
 export function search() {

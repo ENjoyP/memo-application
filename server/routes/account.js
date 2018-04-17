@@ -135,12 +135,12 @@ router.get('/search/:username', (req, res) => {
     .sort({username : 1})
     .exec((err, accounts) => {
         if(err) throw err;
-        res.json(accounts);
+        return res.json(accounts);
     });
 });
 
 router.get('/search', (req, res) => {
-    res.json([]);
+    return res.json([]);
 });
 
 export default router;

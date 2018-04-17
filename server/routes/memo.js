@@ -188,7 +188,7 @@ router.get('/', (req, res) => {
     .limit(6)
     .exec((err, memos) => {
         if(err) throw err;
-        res.json(memos);
+        return res.json(memos);
     });
 });
 
