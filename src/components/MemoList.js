@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Memo } from 'components';
+import { Memo, Pagination } from 'components';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 const propTypes = {
@@ -37,28 +37,38 @@ class MemoList extends Component {
 
     render(){
         const mapToComponents = data => {
-            return data.map((memo, i) => {
+            if(data.length > 0)
+                return data.map((memo, i) => {
+                    return (
+                        <Memo
+                            data={memo}
+                            ownership={(memo.writer === this.props.currentUser)}
+                            key={memo._id}
+                            index={i}
+                            onEdit={this.props.onEdit}
+                            onRemove={this.props.onRemove}
+                            onStar={this.props.onStar}
+                            currentUser={this.props.currentUser}
+                            totalCount={data.length}
+                        />
+                    );
+                });
+            else
                 return (
-                    <Memo
-                        data={memo}
-                        ownership={(memo.writer === this.props.currentUser)}
-                        key={memo._id}
-                        index={i}
-                        onEdit={this.props.onEdit}
-                        onRemove={this.props.onRemove}
-                        onStar={this.props.onStar}
-                        currentUser={this.props.currentUser}
-                    />
+                    <Memo/>
                 );
-            });
         };
         return(
             <div>
+                <div className="container">
+                    <div className="col z-depth-1" style={{"backgroundColor" : "#fff", "paddingTop" : "5px", "paddingBottom" : "5px", "paddingLeft": "20px"}}><strong>총 0건의 게시글</strong></div>
+                </div>
                 <ReactCSSTransitionGroup transitionName="memo" 
                     transitionEnterTimeout={2000}
                     transitionLeaveTimeout={1000}>
                     {mapToComponents(this.props.data)}
                 </ReactCSSTransitionGroup>
+                <Pagination/>
             </div>
         );
     }

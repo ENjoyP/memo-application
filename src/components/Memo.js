@@ -11,7 +11,8 @@ const propTypes = {
     onRemove : PropTypes.func,
     onStar : PropTypes.func,
     starStatus : PropTypes.object,
-    currentUser : PropTypes.string
+    currentUser : PropTypes.string,
+    totalCount : PropTypes.number
 };
 const defaultProps = {
     data : {
@@ -37,7 +38,8 @@ const defaultProps = {
         console.error('onStar function not defined');
     },
     starStatus : {},
-    currentUser : ''
+    currentUser : '',
+    totalCount : 0
 };
 
 class Memo extends Component {
@@ -45,6 +47,7 @@ class Memo extends Component {
     constructor(props){
         super(props);
         this.state = {
+            dataCount : props.data.count,
             editMode : false,
             value : props.data.contents
         };
@@ -124,7 +127,7 @@ class Memo extends Component {
         const { data, ownership } = this.props;
 
         let editedInfo = (
-            <span style={{color : '#AAB5BC'}}> · Edited <TimeAgo date={data.date.edited} live={true}/></span>
+            <span style={{color : '#AAB5BC'}}> 路 Edited <TimeAgo date={data.date.edited} live={true}/></span>
         );
 
         let starStyle = (this.props.data.starred.indexOf(this.props.currentUser) > -1) ? { color : '#ff9980'} : {};
@@ -147,20 +150,21 @@ class Memo extends Component {
         const memoView = (
             <div className="card">
                 <div className="info">
-                    <Link to={`/wall/${this.props.data.writer}`} className="username">{this.props.data.writer}</Link> wrote a log · <TimeAgo date={data.date.created} />
+                    <Link to={`/wall/${this.props.data.writer}`} className="username">{this.props.data.writer}</Link> wrote a log 路 <TimeAgo date={data.date.created} />
                     { data.isEdited ? editedInfo : undefined }
                     { ownership ? dropDownMenu : undefined }
                 </div>
                 <div className="card-content">
                     {data.contents}
                 </div>
-                <div className="footer">
+                {/*<div className="footer">
                     <i 
                         className="material-icons log-footer-icon star icon-button"
                         style={starStyle}
                         onClick={this.handleStar}>star</i>
                     <span className="star-count">{data.starred.length}</span>
-                </div>
+                
+                </div>*/}
             </div>
         );
 
@@ -180,11 +184,18 @@ class Memo extends Component {
             </div>
         );
 
+        const blankView = (
+            <div className="card">
+                <div className="card-content" style={{"textAlign" : "center"}}>
+                    등록(검색)된 게시글이 없습니다.
+                </div>
+            </div>
+        )
         
 
         return(
             <div className="container memo">
-                { this.state.editMode ? editView : memoView }
+                { this.props.totalCount > 0 ? (this.state.editMode ? editView : memoView) : blankView }
             </div>
         );
     }

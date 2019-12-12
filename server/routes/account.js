@@ -15,6 +15,7 @@ router.post('/signup', (req, res) => {
     let usernameRegex = /^[a-z0-9]+$/;
     let p_username = req.body.username;
     let p_password = req.body.password;
+    let p_usernick = req.body.usernick;
 
     if(!usernameRegex.test(p_username)){
         return res.status(400).json({
@@ -42,7 +43,8 @@ router.post('/signup', (req, res) => {
         // CREATE ACCOUNT
         let account = new Account({
             username : p_username,
-            password : p_password
+            password : p_password,
+            usernick : p_usernick
         });
 
         account.password = account.generateHash(account.password);
@@ -55,7 +57,6 @@ router.post('/signup', (req, res) => {
             });
         });
     });
-    
 });
 
 /*

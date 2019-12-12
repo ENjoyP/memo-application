@@ -2,6 +2,9 @@ import {
     AUTH_LOGIN, 
     AUTH_LOGIN_SUCCESS, 
     AUTH_LOGIN_FAILURE ,
+    AUTH_CHECK_ID,
+    AUTH_CHECK_ID_SUCCESS,
+    AUTH_CHECK_ID_FAILURE,
     AUTH_REGISTER,
     AUTH_REGISTER_SUCCESS,
     AUTH_REGISTER_FAILURE,
@@ -44,6 +47,30 @@ export function loginFailure() {
     return {
         type : AUTH_LOGIN_FAILURE
     };
+}
+
+/* CHECK ID */
+export function checkIdRequest(userid){
+
+}
+
+export function checkId() {
+    return {
+        type : AUTH_CHECK_ID
+    };
+}
+
+export function checkIdSuccess() {
+    return {
+        type : AUTH_CHECK_ID_SUCCESS
+    };
+}
+
+export function checkIdFailure(error) {
+    return {
+        type : AUTH_CHECK_ID_FAILURE,
+        error
+    }
 }
 
 /* REGISTER */

@@ -18,14 +18,18 @@ class Authentication extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            userid : "",
             username : "",
             password : "",
+            idcheck : "N",
+            checkIdBtnClass : "waves-effect waves-light red accent-2 btn",
             success : false
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
         this.handleRegister = this.handleRegister.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.handleCheckId = this.handleCheckId.bind(this);
     };
 
     handleChange(e) {
@@ -56,21 +60,27 @@ class Authentication extends Component {
     handleRegister() {
         let id = this.state.username;
         let pw = this.state.password;
+        let idcheck = this.state.idcheck;
 
-        this.props.onRegister(id, pw).then(
-            (result) => {
-                if(!result) {
-                    this.setState({
-                        username : '',
-                        password : ''
-                    });
-                } else {
-                    this.setState({
-                        success : true
-                    });
+        if(idcheck == "Y"){
+            this.props.onRegister(id, pw).then(
+                (result) => {
+                    if(!result) {
+                        this.setState({
+                            userid : '',
+                            username : '',
+                            password : ''
+                        });
+                    } else {
+                        this.setState({
+                            success : true
+                        });
+                    }
                 }
-            }
-        );
+            );
+        } else {
+            alert("Please do ID duplicate check.");
+        }
     }
 
     handleKeyPress(e){
@@ -83,17 +93,36 @@ class Authentication extends Component {
         }
     }
 
+    handleCheckId(e){
+        let curClass = this.state.checkIdBtnClass;
+        let id = this.state.userid;
+
+        if(!id){
+            alert("please enter ID");
+            return;
+        }
+
+        if(curClass.indexOf("red") > 0)
+            this.setState({
+                checkIdBtnClass : "waves-effect waves-light blue accent-2 btn"
+            });
+        else 
+            this.setState({
+                checkIdBtnClass : "waves-effect waves-light red accent-2 btn"
+            });
+    }
+
     render(){
          const inputBoxes = (
             <div>
                 <div className="input-field col s12 username">
-                    <label>Username</label>
+                    <label>ID</label>
                     <input
-                    name="username"
+                    name="userid"
                     type="text"
                     className="validate"
                     onChange={this.handleChange}
-                    value={this.state.username}
+                    value={this.state.userid}
                     />
                 </div>
                 <div className="input-field col s12">
@@ -128,7 +157,6 @@ class Authentication extends Component {
                             </div>
                         </div>
                     </div>
-                
                 </div>
             </div>
         );
@@ -136,6 +164,20 @@ class Authentication extends Component {
             <div className="card-content">
                 <div className="row">
                     {inputBoxes}
+                    <div className="input-field col s12">
+                        <label>Name</label>
+                        <input
+                        name="username"
+                        type="text"
+                        className="validate"
+                        onChange={this.handleChange}
+                        value={this.state.username}
+                        />
+                    </div>
+                    <a className={this.state.checkIdBtnClass} style={{"margin-bottom" : "10px"}}
+                        onClick={this.handleCheckId}>
+                        CHECK ID
+                    </a>
                     <a className="waves-effect waves-light btn"
                         onClick={this.handleRegister}>
                         CREATE
@@ -146,9 +188,9 @@ class Authentication extends Component {
 
         return(
             <div className="container auth">
-                <Link className="logo" to="/">MEMOPAD</Link>
+                <Link className="logo" to="/">HYCU CSH PROJECT</Link>
                 <div className="card">
-                    <div className="header blue white-text center">
+                    <div className="header green white-text center">
                         <div className="card-content">{this.props.mode ? "LOGIN" : "REGISTER"}</div>
                     </div>
                     { this.props.mode ? loginView : registerView }
